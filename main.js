@@ -101,32 +101,45 @@ document.addEventListener('DOMContentLoaded', () => {
     updateTimelineProgress(); // Initial check
 
     // --- Project Card 3D Tilt & Mouse Interaction ---
-    const handleOnMouseMove = e => {
-        const { currentTarget: target } = e;
-        const rect = target.getBoundingClientRect(),
-        x = e.clientX - rect.left,
-        y = e.clientY - rect.top;
+    const cardTiltEffect = () => {
+        const cards = document.querySelectorAll(".project-card");
+        
+        cards.forEach(card => {
+            const visual = card.querySelector(".project-card-visual");
+            if (!visual) return;
+            
+            let rect = null;
 
-        // Flashlight vars
-        target.style.setProperty("--mouse-x", `${x}px`);
-        target.style.setProperty("--mouse-y", `${y}px`);
+            card.addEventListener('mouseenter', () => {
+                rect = card.getBoundingClientRect();
+            });
 
-        // 3D Tilt calculation
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = ((y - centerY) / centerY) * -10; // Max 10deg
-        const rotateY = ((x - centerX) / centerX) * 10;
-
-        target.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            card.addEventListener('mousemove', e => {
+                if (!rect) rect = card.getBoundingClientRect();
+                
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                // Flashlight vars (passados para o visual)
+                visual.style.setProperty("--mouse-x", `${x}px`);
+                visual.style.setProperty("--mouse-y", `${y}px`);
+                
+                // 3D Tilt calculation
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -7; 
+                const rotateY = ((x - centerX) / centerX) * 7;
+                
+                visual.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                rect = null;
+                visual.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+            });
+        });
     };
 
-    const handleMouseLeave = e => {
-        const { currentTarget: target } = e;
-        target.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
-    };
-
-    for(const card of document.querySelectorAll(".project-card")) {
-        card.addEventListener('mousemove', handleOnMouseMove);
-        card.addEventListener('mouseleave', handleMouseLeave);
-    }
+    cardTiltEffect();
 });
