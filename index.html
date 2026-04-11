@@ -6,14 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CriaWeb - Agência de Web Design e Desenvolvimento</title>
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
@@ -21,7 +21,7 @@
     <!-- Preloader -->
     <div id="preloader">
         <div class="glitch-wrapper">
-            <img src="sem fundo preto.webp" alt="Loading" class="glitch-img">
+            <img src="assets/img/sem fundo preto.webp" alt="Loading" class="glitch-img">
         </div>
     </div>
 
@@ -29,7 +29,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-left">
-                <img src="toda branca.png" alt="CriaWeb Logo" class="logo-img">
+                <img src="assets/img/toda branca.png" alt="CriaWeb Logo" class="logo-img">
             </div>
             <div class="nav-center">
                 <div class="nav-pills">
@@ -54,7 +54,7 @@
         <section id="home" class="hero reveal-section">
             <div class="hero-bg-wrapper">
                 <video autoplay muted loop playsinline class="hero-bg-video">
-                    <source src="assets/hero-bg.mp4" type="video/mp4">
+                    <source src="assets/video/hero-bg.mp4" type="video/mp4">
                 </video>
                 <div class="hero-bg-overlay"></div>
             </div>
@@ -119,7 +119,7 @@
 
                 <div class="author-info reveal-item" style="--delay: 0.4s">
                     <div class="avatar-wrapper">
-                        <img src="sem fundo preto.png" alt="Autor" class="author-avatar">
+                        <img src="assets/img/sem fundo preto.png" alt="Autor" class="author-avatar">
                     </div>
                     <span class="author-role">Fundador & Web Designer</span>
                 </div>
@@ -256,99 +256,89 @@
 
                 <div class="projects-grid">
                     <!-- Project 1 -->
-                    <div class="project-card" style="--delay: 0.1s">
+                    <a href="https://axioma-two.vercel.app/" target="_blank" class="project-card" style="--delay: 0.1s; text-decoration: none;">
                         <div class="project-card-visual">
                             <div class="project-inner-grid"></div>
                             <div class="project-img-wrapper">
-                                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200"
-                                    alt="Projeto 1">
-                            </div>
-                            <div class="project-info">
-                                <div class="project-meta">
-                                    <span class="company">E-commerce</span>
-                                </div>
-                                <h3 class="project-title">Redesign<br>Premium</h3>
-                                <p class="project-desc">Desenvolvimento de uma experiência de alto padrão com forte foco
-                                    em conversão e usabilidade mobile.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Project 2 -->
-                    <div class="project-card" style="--delay: 0.1s">
-                        <div class="project-card-visual">
-                            <div class="project-inner-grid"></div>
-                            <div class="project-img-wrapper">
-                                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200"
-                                    alt="Projeto 2">
+                                <img src="assets/img/axioma card.webp" alt="Axioma Construtora">
                             </div>
                             <div class="project-info">
                                 <div class="project-meta">
                                     <span class="company">Institucional</span>
                                 </div>
-                                <h3 class="project-title">Presença<br>Digital</h3>
-                                <p class="project-desc">Criação de landing page moderna para captação de leads
-                                    qualificados no setor de tecnologia.</p>
+                                <h3 class="project-title">Axioma<br>Construtora</h3>
+                                <p class="project-desc">Destaque para a presença corporativa premium e o portfólio de obras com navegação imersiva.</p>
                             </div>
                         </div>
-                    </div>
+                    </a>
+
+                    <!-- Project 2 -->
+                    <a href="https://bierebarba.vercel.app/" target="_blank" class="project-card" style="--delay: 0.1s; text-decoration: none;">
+                        <div class="project-card-visual">
+                            <div class="project-inner-grid"></div>
+                            <div class="project-img-wrapper">
+                                <img src="assets/img/bieebarba card.webp" alt="Bier & Barba">
+                            </div>
+                            <div class="project-info">
+                                <div class="project-meta">
+                                    <span class="company">Institucional & Agendamento</span>
+                                </div>
+                                <h3 class="project-title">Bier &<br>Barba</h3>
+                                <p class="project-desc">Focado na experiência híbrida de barbearia e cervejas artesanais, com um sistema de agendamento integrado.</p>
+                            </div>
+                        </div>
+                    </a>
 
                     <!-- Project 3 -->
-                    <div class="project-card" style="--delay: 0.1s">
+                    <a href="https://mesa-agora.vercel.app/" target="_blank" class="project-card" style="--delay: 0.1s; text-decoration: none;">
                         <div class="project-card-visual">
                             <div class="project-inner-grid"></div>
                             <div class="project-img-wrapper">
-                                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200"
-                                    alt="Projeto 3">
+                                <img src="assets/img/mesa ágora card.webp" alt="Mesa Ágora">
                             </div>
                             <div class="project-info">
                                 <div class="project-meta">
-                                    <span class="company">Aplicativo Web</span>
+                                    <span class="company">E-commerce</span>
                                 </div>
-                                <h3 class="project-title">Dashboard<br>Gerencial</h3>
-                                <p class="project-desc">Interface focada em visualização de dados complexos com
-                                    interações fluidas e responsivas.</p>
+                                <h3 class="project-title">Mesa<br>Ágora</h3>
+                                <p class="project-desc">Uma plataforma de e-commerce centrada na beleza e particularidades de uma mesa que eleva o padrão de qualquer ambiente.</p>
                             </div>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- Project 4 -->
-                    <div class="project-card" style="--delay: 0.1s">
+                    <a href="https://nathantransportes.com/" target="_blank" class="project-card" style="--delay: 0.1s; text-decoration: none;">
                         <div class="project-card-visual">
                             <div class="project-inner-grid"></div>
                             <div class="project-img-wrapper">
-                                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200"
-                                    alt="Projeto 4">
+                                <img src="assets/img/nathan transportes card.webp" alt="Nathan Transportes">
                             </div>
                             <div class="project-info">
                                 <div class="project-meta">
-                                    <span class="company">Consultoria</span>
+                                    <span class="company">Portal Corporativo</span>
                                 </div>
-                                <h3 class="project-title">Landing<br>Page de Vendas</h3>
-                                <p class="project-desc">Estrutura otimizada e copywriting alinhado para escalar as
-                                    vendas de serviços b2b.</p>
+                                <h3 class="project-title">Nathan<br>Transportes</h3>
+                                <p class="project-desc">Um portal corporativo robusto com sistema de entrega integrada.</p>
                             </div>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- Project 5 -->
-                    <div class="project-card" style="--delay: 0.1s">
+                    <a href="https://santadesign.base44.app/" target="_blank" class="project-card" style="--delay: 0.1s; text-decoration: none;">
                         <div class="project-card-visual">
                             <div class="project-inner-grid"></div>
                             <div class="project-img-wrapper">
-                                <img src="https://images.unsplash.com/photo-1481481600451-24ce59e6c7eb?q=80&w=1200"
-                                    alt="Projeto 5">
+                                <img src="assets/img/santadesign card.webp" alt="Santa Design">
                             </div>
                             <div class="project-info">
                                 <div class="project-meta">
-                                    <span class="company">SaaS</span>
+                                    <span class="company">Portfólio Dinâmico</span>
                                 </div>
-                                <h3 class="project-title">Interface de<br>Software</h3>
-                                <p class="project-desc">Design system completo e desenvolvimento front-end com máxima
-                                    atenção a detalhes visuais.</p>
+                                <h3 class="project-title">Santa<br>Design</h3>
+                                <p class="project-desc">Um site de portfólio dinâmico para uma agência criativa, focado na narrativa visual forte de jogadores.</p>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </section>
@@ -611,11 +601,11 @@
                 <div class="footer-col">
                     <h4 class="footer-title">Portfólio</h4>
                     <ul class="footer-links">
-                        <li><a href="#projects">Redesign Premium</a></li>
-                        <li><a href="#projects">Presença Digital</a></li>
-                        <li><a href="#projects">Dashboard Gerencial</a></li>
-                        <li><a href="#projects">Landing Page de Vendas</a></li>
-                        <li><a href="#projects">Interface de Software</a></li>
+                        <li><a href="https://axioma-two.vercel.app/" target="_blank">Axioma Construtora</a></li>
+                        <li><a href="https://bierebarba.vercel.app/" target="_blank">Bier & Barba</a></li>
+                        <li><a href="https://mesa-agora.vercel.app/" target="_blank">Mesa Ágora</a></li>
+                        <li><a href="https://nathantransportes.com/" target="_blank">Nathan Transportes</a></li>
+                        <li><a href="https://santadesign.base44.app/" target="_blank">Santa Design</a></li>
                     </ul>
                 </div>
 
@@ -657,7 +647,7 @@
             </div>
 
             <div class="footer-huge-logo reveal-item reveal-repeat logo-slow" style="--delay: 0.0s;">
-                <img src="sem fundo preto.png" alt="criaweb Logo Giant" class="huge-logo-img">
+                <img src="assets/img/sem fundo preto.png" alt="criaweb Logo Giant" class="huge-logo-img">
             </div>
 
             <div class="footer-copyright">
@@ -666,7 +656,7 @@
         </div>
     </footer>
 
-    <script src="main.js"></script>
+    <script src="assets/js/main.js"></script>
 </body>
 
 </html>
