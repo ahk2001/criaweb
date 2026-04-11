@@ -16,28 +16,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(entry.target.classList.contains('text-reveal')) {
                     entry.target.classList.add('active');
                 }
+            } else {
+                if(entry.target.classList.contains('reveal-repeat')) {
+                    entry.target.classList.remove('visible');
+                }
             }
         });
     }, observerOptions);
 
     revealElements.forEach(el => observer.observe(el));
 
-    // Reveal animations ESPECÍFICO para os cards (Projetos)
-    const cardElements = document.querySelectorAll('.reveal-left');
-    const cardObserverOptions = {
-        threshold: 0.4, // Dispara quando quase metade (40%) do card estiver visível
-        rootMargin: "0px"
-    };
-
-    const cardObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, cardObserverOptions);
-
-    cardElements.forEach(el => cardObserver.observe(el));
+    // Animações de revelação dos cards removidas a pedido; aparecem imediatamente na carga.
     
     // PRELOADER LOGIC & Hero Reveal
     const preloader = document.getElementById('preloader');
@@ -84,9 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const rect = timelineBody.getBoundingClientRect();
         const viewHeight = window.innerHeight;
+        const triggerPoint = viewHeight / 2;
         
         // Progress starts when top of timeline hits middle of screen
-        const startScroll = rect.top - (viewHeight / 2);
+        const startScroll = rect.top - triggerPoint;
         const totalHeight = rect.height;
         
         let progress = 0;
@@ -94,6 +84,25 @@ document.addEventListener('DOMContentLoaded', () => {
             progress = Math.min(Math.max((Math.abs(startScroll) / totalHeight) * 100, 0), 100);
             progressLine.style.height = `${progress}%`;
         }
+
+        // Ativação dos anos e bolinhas (Saturation effect)
+        const timelineItems = document.querySelectorAll('.timeline-item-wrapper');
+        timelineItems.forEach(item => {
+            const dot = item.querySelector('.timeline-v-dot');
+            const year = item.querySelector('.timeline-v-year');
+            if (!dot || !year) return;
+            
+            const dotRect = dot.getBoundingClientRect();
+            
+            // Se o dot passou do ponto de gatilho (meio da tela)
+            if (dotRect.top <= triggerPoint) {
+                dot.classList.add('active');
+                year.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+                year.classList.remove('active');
+            }
+        });
     };
 
     window.addEventListener('scroll', updateTimelineProgress);
@@ -142,4 +151,70 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     cardTiltEffect();
+
+    // --- Stacking Cards Effect ---
+    const initStackingCards = () => {
+        const parent = document.querySelector('.projects-grid');
+        const cards = document.querySelectorAll('.project-card');
+        if (!parent || cards.length === 0) return;
+
+        // Envolve as classes visuais num wrapper limpo para evitar conflitos de tilt hover ou entrance CSS
+        cards.forEach((card) => {
+            const visual = card.querySelector('.project-card-visual');
+            if (visual) {
+                const stackWrapper = document.createElement('div');
+                stackWrapper.className = 'project-stack-wrapper';
+                card.appendChild(stackWrapper);
+                stackWrapper.appendChild(visual);
+            }
+        });
+
+        const updateStack = () => {
+            const stickyTop = window.innerHeight * 0.20;
+            const gap = window.innerHeight * 0.30;
+            
+            cards.forEach((card, index) => {
+                const stackWrapper = card.querySelector('.project-stack-wrapper');
+                if (!stackWrapper) return;
+                
+                let scale = 1;
+                let brightness = 1;
+                let yOffset = 0;
+                
+                if (index < cards.length - 1) {
+                    const nextCard = cards[index + 1];
+                    // Calcula a distância exata até o proximo card
+                    const distanceToNext = card.getBoundingClientRect().height + gap;
+                    
+                    // A distância que o PRÓXIMO card está do ponto de ancoragem (stickyTop)
+                    const distanceToStick = nextCard.getBoundingClientRect().top - stickyTop;
+                    
+                    // levels -> fração do percurso já feito pelo próximo card rumo ao topo do atual
+                    // Se distanceToStick = distanceToNext (ta na base), levels = 0
+                    // Se distanceToStick = 0 (ta no topo), levels = 1
+                    let levels = 1 - (distanceToStick / distanceToNext);
+                    levels = Math.max(0, Math.min(1, levels)); // Força limites de 0 a 1
+                    
+                    if (levels > 0) {
+                        scale = 1 - (levels * 0.15); // Encolhimento super perceptivo de 15%
+                        
+                        yOffset = -(levels * 40); // Move 40px PARA CIMA para criar o degrau visual
+                        
+                        brightness = 1 - (levels * 0.5); 
+                        brightness = Math.max(0.3, brightness); // Teto de iluminação
+                    }
+                }
+                
+                stackWrapper.style.transform = `translateY(${yOffset}px) scale(${scale})`;
+                stackWrapper.style.filter = `brightness(${brightness})`;
+            });
+        };
+
+        window.addEventListener('scroll', () => requestAnimationFrame(updateStack), { passive: true });
+        window.addEventListener('resize', () => requestAnimationFrame(updateStack), { passive: true });
+        updateStack();
+    };
+
+    initStackingCards();
 });
+

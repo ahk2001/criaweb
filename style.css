@@ -1,3 +1,40 @@
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        var(--brand-color) 30%,
+        var(--brand-color) 70%,
+        transparent
+    );
+    border-radius: 100px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        #94390e 30%,
+        #94390e 70%,
+        transparent
+    );
+    background-clip: content-box;
+}
+
 :root {
     --bg-color: rgb(4, 7, 13);
     --text-primary: rgb(228, 233, 242);
@@ -615,19 +652,18 @@ body {
     background: var(--pill-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--border-subtle);
+    border: 1px solid var(--brand-color); /* Borda colorida por padrão agora */
     border-radius: 1.5rem;
     padding: 2.5rem;
     max-width: 450px;
-    transition: border-color 0.4s ease, background 0.4s ease, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
     text-align: left;
 }
 
 .timeline-card-glass:hover {
-    border-color: var(--brand-color);
-    background: rgba(255, 255, 255, 0.05);
     transform: translateY(-5px);
-    transition: border-color 0.4s ease, background 0.4s ease; /* No transform transition on hover */
+    box-shadow: 0 0 30px var(--brand-color-glow), 0 0 10px rgba(124, 48, 12, 0.2); /* Efeito de luz em volta */
+    border-color: #ff5e14; /* Borda acende levemente no hover */
 }
 
 /* Área de detecção extra para evitar tremor no deslocamento vertical */
@@ -648,6 +684,20 @@ body {
     font-weight: 400;
     color: var(--brand-color);
     white-space: nowrap;
+    filter: saturate(0); /* Saturação baixa por padrão */
+    opacity: 0.3; /* Opacidade reduzida para reforçar o efeito de desativado */
+    transition: filter 0.6s ease, opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.timeline-v-year.active {
+    filter: saturate(1);
+    opacity: 1;
+}
+
+.timeline-v-dot.active {
+    background: var(--brand-color);
+    box-shadow: 0 0 20px var(--brand-color-glow), 0 0 40px var(--brand-color-glow);
+    transform: translate(-50%, -50%) scale(1.2);
 }
 
 /* Year on the opposite side of the card */
@@ -662,11 +712,12 @@ body {
 @media (max-width: 768px) {
     .timeline-v-line, .timeline-v-progress, .timeline-v-dot {
         left: 20px;
-        transform: translateX(0);
+        transform: translateX(-50%);
     }
     
     .timeline-item-wrapper {
         flex-direction: column;
+        margin-bottom: 8rem; /* Aumentado para dar espaço ao ano absoluto */
     }
     
     .timeline-item-content {
@@ -674,10 +725,24 @@ body {
         padding-left: 50px !important;
         padding-right: 0 !important;
         justify-content: flex-start !important;
+        flex-direction: column;
+        position: relative;
     }
     
+    .timeline-card-glass {
+        order: 1;
+    }
+
     .timeline-v-year {
-        display: none;
+        display: block !important;
+        position: absolute !important;
+        top: calc(100% + 1.2rem) !important;
+        left: 2.5rem !important;
+        transform: none !important;
+        margin: 0 !important;
+        font-size: 2.2rem;
+        width: fit-content;
+        /* Removido opacity/filter !important para permitir animação JS */
     }
 }
 
@@ -686,14 +751,25 @@ body {
     position: relative;
     padding: 2rem 2rem 10rem;
     background: var(--bg-color);
-    overflow: hidden;
     width: 100%;
     perspective: 2000px;
 }
 
-.proj-bg {
+.proj-bg-wrapper {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.proj-bg {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 100%;
     z-index: 1;
     pointer-events: none;
     background-color: var(--bg-color);
@@ -780,30 +856,48 @@ body {
 }
 
 .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 30vh;
     margin-top: 6rem;
+    position: relative;
+    padding-bottom: 30vh;
 }
 
 /* Base Project Card */
 .project-card {
-    position: relative;
-    grid-column: span 12;
+    position: sticky;
+    top: 20vh; /* Fixo perfeitamente no mesmo centro, sem offsets */
+    width: 100%;
     aspect-ratio: 21 / 9;
     background: transparent; /* Card pai agora é invisível, serve apenas de sensor */
     border: none;
     overflow: visible; 
-    display: flex;
-    flex-direction: column;
+    display: block;
     cursor: pointer;
+}
+
+.project-card:nth-child(1) { --index: 0; z-index: 1; }
+.project-card:nth-child(2) { --index: 1; z-index: 2; }
+.project-card:nth-child(3) { --index: 2; z-index: 3; }
+.project-card:nth-child(4) { --index: 3; z-index: 4; }
+.project-card:nth-child(5) { --index: 4; z-index: 5; }
+.project-card:nth-child(6) { --index: 5; z-index: 6; }
+.project-card:nth-child(7) { --index: 6; z-index: 7; }
+
+.project-stack-wrapper {
+    width: 100%;
+    height: 100%;
+    transform-origin: top center;
+    will-change: transform, filter;
 }
 
 .project-card-visual {
     position: relative;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.05); /* Levemente mais opaco que o --pill-bg original */
+    background-color: var(--bg-color); /* Fundo sólido transportado para dentro do elemento 3D */
+    background-image: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05)); /* Sobreposição de vidro */
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
     border: 1px solid var(--border-subtle);
@@ -888,7 +982,7 @@ body {
 }
 
 .project-card:hover .project-img-wrapper {
-    transform: translateY(-55%) skew(0deg) rotate(0deg) scale(1.05);
+    transform: translateY(-50%) skew(0deg) rotate(0deg) scale(1.05);
 }
 
 .project-img-wrapper img {
@@ -966,6 +1060,9 @@ body {
         height: 100%;
         right: 0;
         top: 0;
+        transform: none;
+    }
+    .project-card:hover .project-img-wrapper {
         transform: none;
     }
     .project-title {
@@ -1099,30 +1196,44 @@ body {
 /* --- Main Footer --- */
 .main-footer {
     position: relative;
-    padding: 100px 0 0 0;
+    padding: 100px 0 40px 0; /* Adicionado 40px de padding inferior */
     background-color: var(--bg-color);
-    overflow: hidden;
     width: 100%;
 }
 
 .footer-glow-line {
     width: 100%;
     height: 1px;
-    background: var(--brand-color);
-    box-shadow: 0 0 10px var(--brand-color-glow), 0 0 20px var(--brand-color-glow);
+    background: linear-gradient(90deg, transparent, var(--brand-color) 30%, var(--brand-color) 70%, transparent);
     position: relative;
     margin-bottom: 80px;
-    animation: footer-line-pulse 3s infinite ease-in-out;
+    display: flex;
+    justify-content: center;
+}
+
+.footer-glow-line::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15%;
+    height: 2px;
+    background: var(--brand-color);
+    filter: blur(4px);
+    animation: footer-line-pulse 2.5s infinite ease-in-out;
+    border-radius: 50%;
 }
 
 @keyframes footer-line-pulse {
     0%, 100% {
-        opacity: 0.3;
-        box-shadow: 0 0 5px var(--brand-color-glow);
+        opacity: 0.1;
+        transform: translateY(-50%) scaleX(1);
     }
     50% {
         opacity: 1;
-        box-shadow: 0 0 15px var(--brand-color), 0 0 30px var(--brand-color-glow);
+        transform: translateY(-50%) scaleX(5);
+        background: #ff5e14; /* Cor mais forte para pulso central e brilhante */
+        box-shadow: 0 0 15px #ff5e14;
     }
 }
 
@@ -1136,12 +1247,14 @@ body {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 60px;
-    margin-bottom: 80px;
+    margin-bottom: 20px; /* Reduzido de 80px */
 }
 
 .footer-col {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 .footer-title {
@@ -1181,17 +1294,17 @@ body {
 
 .footer-socials {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: center;
     gap: 16px;
 }
 
 .footer-social-link {
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: center;
     color: var(--text-primary);
     text-decoration: none;
-    font-size: 1rem;
     opacity: 0.6;
     transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -1199,7 +1312,7 @@ body {
 .footer-social-link:hover {
     opacity: 1;
     color: var(--brand-color);
-    transform: translateX(5px);
+    transform: translateY(-5px);
 }
 
 .social-icon-wrapper {
@@ -1223,11 +1336,10 @@ body {
 
 .footer-huge-logo {
     width: 100%;
-    margin-top: 40px;
+    margin-top: 0; /* Removido espaçamento superior */
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    overflow: hidden;
     line-height: 0;
 }
 
@@ -1236,15 +1348,34 @@ body {
     max-width: none;
     height: auto;
     object-fit: contain;
-    opacity: 0.15; /* Aumentado levemente para destacar a cor da marca */
+    opacity: 0.15;
     transition: opacity 0.5s ease;
     user-select: none;
     pointer-events: none;
-    transform: translateY(15%);
+    transform: translateY(-10%); /* Puxado para cima para garantir visibilidade do texto inferior */
 }
 
 .main-footer:hover .huge-logo-img {
-    opacity: 0.12;
+    opacity: 0.20;
+}
+
+/* Custom slow reveal for the logo */
+.reveal-item.logo-slow {
+    transition: opacity 2s ease-out, transform 2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Copyright Style */
+.footer-copyright {
+    text-align: center;
+    margin-top: 40px;
+    padding-bottom: 20px;
+}
+
+.footer-copyright p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    opacity: 0.5;
+    letter-spacing: 0.05em;
 }
 
 /* Responsividade do Rodapé */
@@ -1267,6 +1398,7 @@ body {
         margin-bottom: 40px;
     }
     .huge-logo-img {
-        width: 150%;
+        width: 100%;
+        transform: translateY(0);
     }
 }
