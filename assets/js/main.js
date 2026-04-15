@@ -1,4 +1,82 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // === GSAP Text Reveal & Parallax (Section: Sobre Nós / Services) ===
+    const animatedText = document.getElementById('animated-text');
+    if (animatedText && typeof gsap !== 'undefined') {
+        const textStr = animatedText.innerText.trim();
+        animatedText.innerHTML = ''; // Limpa o conteúdo atual
+        
+        // Separa a frase principal da frase em destaque
+        const textParts = textStr.split('soluções reais."');
+        const normalWords = textParts[0].trim().split(' ');
+        const highlightWords = 'soluções reais."'.split(' ');
+
+        // Adiciona as palavras normais
+        normalWords.forEach(word => {
+            if(!word) return;
+            const span = document.createElement('span');
+            span.className = 'word word-normal';
+            span.innerText = word;
+            animatedText.appendChild(span);
+            animatedText.appendChild(document.createTextNode(' ')); // Espaço explícito entre as palavras
+        });
+
+        // Adiciona o bloco com "soluções reais." (itálico e destaque)
+        const serifWrapper = document.createElement('span');
+        serifWrapper.className = 'serif-italic';
+        highlightWords.forEach((word, idx) => {
+            if(!word) return;
+            const span = document.createElement('span');
+            span.className = 'word word-highlight';
+            span.innerText = word;
+            serifWrapper.appendChild(span);
+            if (idx < highlightWords.length - 1) {
+                serifWrapper.appendChild(document.createTextNode(' '));
+            }
+        });
+        animatedText.appendChild(serifWrapper);
+
+        // Fixando (Pin) a secção no meio da tela enquanto o texto revela
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: '.quote-section',
+                start: "center center", // Prende quando a secção atingir o centro
+                end: "+=200%", // Aumentado de 150% para 200% para dar mais espaço de scroll total
+                pin: true,
+                scrub: 1
+            }
+        });
+
+        // Revela as palavras na ordem natural do DOM (stagger) 
+        tl.to('.word', {
+            color: (index, target) => target.classList.contains('word-highlight') ? "#7c300c" : "#ffffff",
+            filter: (index, target) => target.classList.contains('word-highlight') ? "saturate(1)" : "none",
+            stagger: 0.1,
+            ease: "none"
+        })
+        .to('.author-info', {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: "power2.out"
+        }, "+=0.1")
+        .to({}, { duration: 1 }); // Adiciona um "tempo morto" no final da timeline para travar o scroll após revelar tudo
+    }
+
+    // Scroll Suave para Links Internos (Navbar)
+    // Substitui o scroll-behavior: smooth do CSS que conflita com o GSAP
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const val = this.getAttribute('href');
+            if(val !== '#' && val !== '') {
+                e.preventDefault();
+                const target = document.querySelector(val);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+    });
+
     // Reveal animations para itens gerais (Timeline, Títulos, etc)
     const revealElements = document.querySelectorAll('.reveal-item');
     
